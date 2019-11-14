@@ -1,132 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { connect } from 'react-redux';
+
 import { MdAddShoppingCart } from 'react-icons/md';
+
+import { formatPrice } from '../../utils/format';
+
+import api from '../../services/api';
 
 import { ProductList } from './styles';
 
-export default function Home() {
+function Home({ dispatch }) {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        async function getData() {
+            const response = await api.get('/products');
+
+            const data = response.data.map(product => ({
+                ...product,
+                price: formatPrice(product.price),
+            }));
+
+            setProducts(data);
+        }
+        getData();
+    }, []);
+
+    const handleProduct = product => {
+        dispatch({
+            type: 'ADD_TO_CART',
+            product,
+        });
+    };
+
     return (
         <ProductList>
-            <h1>Home</h1>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
+            {products.map(product => (
+                <li key={product.id}>
+                    <img src={product.image} alt={product.title} />
+                    <strong>{product.title}</strong>
+                    <span>{product.price}</span>
 
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
-            <li>
-                <img
-                    src="https://static.netshoes.com.br/produtos/tenis-esporte-adaption-masculino/14/KTM-0031-014/KTM-0031-014_detalhe2.jpg?ims=326x"
-                    alt="tenis"
-                />
-                <strong>nice tenis</strong>
-                <span>R$129,90</span>
-
-                <button type="button">
-                    <div>
-                        <MdAddShoppingCart size={16} color="#fff" />3
-                    </div>
-                    <span>ADD TO CART</span>
-                </button>
-            </li>
+                    <button type="button" onClick={_ => handleProduct(product)}>
+                        <div>
+                            <MdAddShoppingCart size={16} color="#fff" />3
+                        </div>
+                        <span>ADD TO CART</span>
+                    </button>
+                </li>
+            ))}
         </ProductList>
     );
 }
+
+export default connect()(Home);
