@@ -18,6 +18,7 @@ module.exports = {
     },
     plugins: ['react', 'prettier'],
     rules: {
+        'no-underscore-dangle': 'off',
         'prettier/prettier': 'error',
         'react/jsx-filename-extension': [
             'warn',
