@@ -18,9 +18,9 @@ function Home({ addToCartRequest, amount }) {
 
     useEffect(() => {
         async function getData() {
-            const response = await api.get('/products');
+            const response = await api.get('/stock');
 
-            const data = response.data.map(product => ({
+            const data = response.data.data.map(product => ({
                 ...product,
                 priceFormated: formatPrice(product.price),
             }));
@@ -33,18 +33,18 @@ function Home({ addToCartRequest, amount }) {
     return (
         <ProductList>
             {products.map(product => (
-                <li key={product.id}>
+                <li key={product._id}>
                     <img src={product.image} alt={product.title} />
                     <strong>{product.title}</strong>
                     <span>{product.priceFormated}</span>
 
                     <button
                         type="button"
-                        onClick={() => addToCartRequest(product.id)}
+                        onClick={() => addToCartRequest(product._id)}
                     >
                         <div>
                             <MdAddShoppingCart size={16} color="#fff" />
-                            {amount[product.id] || 0}
+                            {amount[product._id] || 0}
                         </div>
                         <span>ADD TO CART</span>
                     </button>
@@ -56,7 +56,7 @@ function Home({ addToCartRequest, amount }) {
 
 const mapStateToProps = state => ({
     amount: state.cart.reduce((amount, product) => {
-        amount[product.id] = product.amount;
+        amount[product._id] = product.amount;
         return amount;
     }, {}),
 });

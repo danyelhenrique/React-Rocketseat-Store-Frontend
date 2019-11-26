@@ -18,8 +18,10 @@ export default function cart(state = INITIAL_STATE, action) {
             });
 
         case '@cart/UPDATE_AMOUNT_SUCCESS': {
+            console.tron.log('UPDATE_AMOUNT_SUCCESS');
+
             return producer(state, draft => {
-                const productIndex = draft.findIndex(p => p.id === action.id);
+                const productIndex = draft.findIndex(p => p._id === action.id);
 
                 if (productIndex >= 0) {
                     draft[productIndex].amount = Number(action.amount);

@@ -10,13 +10,13 @@ import { formatPrice } from '../../../utils/format';
 import { addToCartSucess, updateAmountSuccess } from './actions';
 
 function* addTocart({ id }) {
-    const productExists = yield select(state =>
-        state.cart.find(p => p.id === id)
-    );
+    const productExists = yield select(state => {
+        return state.cart.find(p => p._id === id);
+    });
 
     const stock = yield call(api.get, `/stock/${id}`);
 
-    const stockAmount = stock.data.amount;
+    const stockAmount = stock.data.store.amount;
     const currentAmount = productExists ? productExists.amount : 0;
 
     const amount = currentAmount + 1;
@@ -28,12 +28,12 @@ function* addTocart({ id }) {
     if (productExists) {
         yield put(updateAmountSuccess(id, amount));
     } else {
-        const response = yield call(api.get, `/products/${id}`);
+        const response = yield call(api.get, `/stock/${id}`);
 
         const data = {
-            ...response.data,
+            ...response.data.store,
             amount: 1,
-            priceFormated: formatPrice(response.data.price),
+            priceFormated: formatPrice(response.data.store.price),
         };
 
         yield put(addToCartSucess(data));
@@ -46,7 +46,7 @@ function* updateAmount({ id, amount }) {
     if (amount <= 0) return;
 
     const stock = yield call(api.get, `/stock/${id}`);
-    const stockAmount = stock.data.amount;
+    const stockAmount = stock.data.store.amount;
 
     if (amount > stockAmount) {
         toast.error('quantity ordered for stock');

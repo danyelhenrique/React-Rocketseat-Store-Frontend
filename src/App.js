@@ -9,7 +9,7 @@ import store from './store';
 
 import Routes from './routes';
 
-import history from './services/history'
+import history from './services/history';
 
 import GlobalStyles from './styles/global';
 

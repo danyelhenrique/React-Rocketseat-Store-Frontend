@@ -17,10 +17,10 @@ import { Container, ProductTable, Total } from './styles';
 
 function Cart({ cart, removeFromCart, updateAmountRequest, total }) {
     const increment = product => {
-        updateAmountRequest(product.id, product.amount + 1);
+        updateAmountRequest(product._id, product.amount + 1);
     };
     const decrement = product => {
-        updateAmountRequest(product.id, product.amount - 1);
+        updateAmountRequest(product._id, product.amount - 1);
     };
     return (
         <Container>
